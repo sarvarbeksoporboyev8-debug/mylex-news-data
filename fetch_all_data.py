@@ -354,18 +354,13 @@ def update_metadata():
 
 def main():
     print("=" * 50)
-    print("Lex.uz Data Updater (Merge Mode)")
+    print("Lex.uz Data Updater")
     print(f"Started at: {datetime.now().isoformat()}")
     print("=" * 50)
     
-    total_added = 0
-    
-    # Fetch and merge all document types
-    for doc_type, act_type in DOC_TYPES.items():
-        total_added += fetch_and_merge(doc_type, act_type)
-    
-    # Fetch and merge news
-    total_added += fetch_news()
+    # Only fetch news (10 items from homepage, overwrites daily)
+    # Codes and laws are static - no need to fetch daily
+    total_fetched = fetch_news()
     
     # Update metadata
     update_metadata()
