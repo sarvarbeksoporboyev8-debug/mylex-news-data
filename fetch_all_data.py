@@ -194,25 +194,7 @@ def load_existing_data(filepath):
         return []
 
 
-def normalize_id(doc_id):
-    """Normalize ID by removing minus sign."""
-    return doc_id.lstrip('-')
 
-
-def merge_documents(existing, new_docs):
-    """Merge new documents with existing, avoiding duplicates."""
-    # Normalize IDs for comparison (some have minus, some don't)
-    existing_ids = {normalize_id(doc['id']) for doc in existing}
-    added = []
-    
-    for doc in new_docs:
-        norm_id = normalize_id(doc['id'])
-        if norm_id not in existing_ids:
-            added.append(doc)
-            existing_ids.add(norm_id)
-    
-    # New docs go at the beginning (most recent first)
-    return added + existing, len(added)
 
 
 def save_json(data, filepath):
@@ -221,10 +203,10 @@ def save_json(data, filepath):
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def fetch_and_merge(doc_type, act_type):
-    """Fetch latest docs with pagination and merge with existing."""
+def fetch_docs(doc_type, act_type):
+    """Fetch docs and overwrite existing files."""
     print(f"\nProcessing {doc_type}...")
-    total_added = 0
+    total = 0
     
     for lang, lang_param in LANGUAGES.items():
         base_url = BASE_URLS[lang]
@@ -235,25 +217,20 @@ def fetch_and_merge(doc_type, act_type):
         
         print(f"  {lang}: fetching from {url}")
         
-        # Use pagination to get more documents
+        # Fetch with pagination
         session = requests.Session()
-        new_docs = fetch_with_pagination(url, session, max_pages=MAX_PAGES)
-        print(f"    Fetched {len(new_docs)} total from lex.uz")
+        docs = fetch_with_pagination(url, session, max_pages=MAX_PAGES)
+        print(f"    Fetched {len(docs)} documents")
         
-        existing = load_existing_data(filepath)
-        print(f"    Existing: {len(existing)} documents")
+        # Overwrite
+        if docs:
+            save_json(docs, filepath)
+            print(f"    Saved to {filepath}")
+            total += len(docs)
         
-        merged, added = merge_documents(existing, new_docs)
-        print(f"    Added {added} new documents")
-        
-        if added > 0:
-            save_json(merged, filepath)
-            print(f"    Saved {len(merged)} total to {filepath}")
-        
-        total_added += added
-        time.sleep(3)  # Longer delay between languages
+        time.sleep(2)
     
-    return total_added
+    return total
 
 
 def fetch_homepage_news(html, base_url):
@@ -365,11 +342,11 @@ def main():
     print(f"Started at: {datetime.now().isoformat()}")
     print("=" * 50)
     
-    total_added = 0
+    total = 0
     
-    # Fetch and merge codes and laws
+    # Fetch codes and laws (overwrite)
     for doc_type, act_type in DOC_TYPES.items():
-        total_added += fetch_and_merge(doc_type, act_type)
+        total += fetch_docs(doc_type, act_type)
     
     # Fetch news (10 items from homepage, overwrites daily)
     fetch_news()
