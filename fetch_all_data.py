@@ -52,7 +52,7 @@ HEADERS = {
 }
 
 DATA_DIR = 'data'
-MAX_PAGES = 10  # Limit pages to avoid too many requests
+MAX_PAGES = 9999  # No practical limit - fetch all pages
 
 
 def extract_viewstate(html):
