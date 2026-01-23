@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Fetch all legal documents from lex.uz and save as JSON files.
-Runs daily via GitHub Actions to keep data fresh.
+Fetch latest documents from lex.uz and MERGE with existing data.
+Only adds new documents, preserves existing ones.
+Runs daily via GitHub Actions.
 """
 
 import json
@@ -26,9 +27,7 @@ BASE_URLS = {
     'en': 'https://lex.uz/en',
 }
 
-# Document types with their act_type values
 DOC_TYPES = {
-    'constitution': 1,
     'codes': 21,
     'laws': 22,
     'president': 3,
@@ -37,23 +36,34 @@ DOC_TYPES = {
     'international': 6,
 }
 
+LANG_SUFFIXES = {
+    'uz-Cyrl': 'uz_Cyrl',
+    'uz': 'uz',
+    'ru': 'ru',
+    'en': 'en',
+}
+
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 }
 
+DATA_DIR = 'data'
+
+
 def fetch_url(url, retries=3):
-    """Fetch URL with retries and delay."""
+    """Fetch URL with retries."""
     for attempt in range(retries):
         try:
             response = requests.get(url, headers=HEADERS, timeout=60)
             response.raise_for_status()
             return response.text
         except Exception as e:
-            print(f"  Attempt {attempt + 1} failed for {url}: {e}")
+            print(f"  Attempt {attempt + 1} failed: {e}")
             if attempt < retries - 1:
                 time.sleep(5)
     return None
+
 
 def parse_html(html):
     """Parse HTML and extract document links."""
@@ -85,97 +95,164 @@ def parse_html(html):
     
     return docs
 
-def fetch_documents(doc_type, act_type):
-    """Fetch documents of a specific type for all languages."""
-    print(f"\nFetching {doc_type}...")
-    results = {}
+
+def load_existing_data(filepath):
+    """Load existing JSON data."""
+    if not os.path.exists(filepath):
+        return []
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except:
+        return []
+
+
+def merge_documents(existing, new_docs):
+    """Merge new documents with existing, avoiding duplicates."""
+    existing_ids = {doc['id'] for doc in existing}
+    added = []
+    
+    for doc in new_docs:
+        if doc['id'] not in existing_ids:
+            added.append(doc)
+            existing_ids.add(doc['id'])
+    
+    # New docs go at the beginning (most recent first)
+    return added + existing, len(added)
+
+
+def save_json(data, filepath):
+    """Save data to JSON file."""
+    with open(filepath, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def fetch_and_merge(doc_type, act_type):
+    """Fetch latest docs and merge with existing."""
+    print(f"\nProcessing {doc_type}...")
+    total_added = 0
     
     for lang, lang_param in LANGUAGES.items():
         base_url = BASE_URLS[lang]
         url = f'{base_url}/search/all?act_type={act_type}&lang={lang_param}'
         
-        print(f"  {lang}: {url}")
-        html = fetch_url(url)
-        docs = parse_html(html)
-        results[lang] = docs
-        print(f"    Found {len(docs)} documents")
+        lang_suffix = LANG_SUFFIXES[lang]
+        filepath = f'{DATA_DIR}/{doc_type}_{lang_suffix}.json'
         
-        # Be nice to the server
+        print(f"  {lang}: fetching from {url}")
+        html = fetch_url(url)
+        new_docs = parse_html(html)
+        print(f"    Fetched {len(new_docs)} from lex.uz")
+        
+        existing = load_existing_data(filepath)
+        print(f"    Existing: {len(existing)} documents")
+        
+        merged, added = merge_documents(existing, new_docs)
+        print(f"    Added {added} new documents")
+        
+        if added > 0:
+            save_json(merged, filepath)
+            print(f"    Saved {len(merged)} total to {filepath}")
+        
+        total_added += added
         time.sleep(2)
     
-    return results
+    return total_added
+
 
 def fetch_news():
-    """Fetch news/recent documents for all languages."""
-    print(f"\nFetching news...")
-    results = {}
+    """Fetch latest news and merge."""
+    print(f"\nProcessing news...")
+    total_added = 0
     today = datetime.now().strftime('%d.%m.%Y')
     
     for lang, lang_param in LANGUAGES.items():
         base_url = BASE_URLS[lang]
         url = f'{base_url}/search/all?from=01.01.2020&to={today}&lang={lang_param}'
         
-        print(f"  {lang}: {url}")
-        html = fetch_url(url)
-        docs = parse_html(html)
-        results[lang] = docs
-        print(f"    Found {len(docs)} documents")
+        lang_suffix = LANG_SUFFIXES[lang]
+        filepath = f'{DATA_DIR}/news_{lang_suffix}.json'
         
+        print(f"  {lang}: fetching from {url}")
+        html = fetch_url(url)
+        new_docs = parse_html(html)
+        print(f"    Fetched {len(new_docs)} from lex.uz")
+        
+        existing = load_existing_data(filepath)
+        print(f"    Existing: {len(existing)} documents")
+        
+        merged, added = merge_documents(existing, new_docs)
+        print(f"    Added {added} new documents")
+        
+        if added > 0:
+            save_json(merged, filepath)
+            print(f"    Saved {len(merged)} total to {filepath}")
+        
+        total_added += added
         time.sleep(2)
     
-    return results
+    return total_added
 
-def save_json(data, filename):
-    """Save data to JSON file."""
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    print(f"Saved {filename}")
+
+def update_metadata():
+    """Update metadata.json with current counts."""
+    metadata = {
+        'last_updated': datetime.now().isoformat(),
+        'document_types': {}
+    }
+    
+    for filename in os.listdir(DATA_DIR):
+        if not filename.endswith('.json'):
+            continue
+        
+        filepath = f'{DATA_DIR}/{filename}'
+        data = load_existing_data(filepath)
+        
+        # Parse filename: type_lang.json
+        parts = filename.replace('.json', '').rsplit('_', 1)
+        if len(parts) != 2:
+            continue
+        
+        doc_type, lang_suffix = parts
+        
+        # Convert lang_suffix back to lang code
+        lang_code = lang_suffix.replace('_', '-')
+        
+        if doc_type not in metadata['document_types']:
+            metadata['document_types'][doc_type] = {}
+        
+        metadata['document_types'][doc_type][lang_code] = {
+            'file': f'data/{filename}',
+            'count': len(data)
+        }
+    
+    save_json(metadata, 'metadata.json')
+    print("\nUpdated metadata.json")
+
 
 def main():
     print("=" * 50)
-    print("Lex.uz Data Fetcher")
+    print("Lex.uz Data Updater (Merge Mode)")
     print(f"Started at: {datetime.now().isoformat()}")
     print("=" * 50)
     
-    all_data = {}
+    total_added = 0
     
-    # Fetch all document types
+    # Fetch and merge all document types
     for doc_type, act_type in DOC_TYPES.items():
-        all_data[doc_type] = fetch_documents(doc_type, act_type)
+        total_added += fetch_and_merge(doc_type, act_type)
     
-    # Fetch news separately (uses date range)
-    all_data['news'] = fetch_news()
+    # Fetch and merge news
+    total_added += fetch_news()
     
-    # Create data directory if needed
-    os.makedirs('data', exist_ok=True)
-    
-    # Save each document type as separate files per language
-    metadata = {
-        'last_updated': datetime.now().isoformat(),
-        'document_types': {},
-    }
-    
-    for doc_type, lang_data in all_data.items():
-        metadata['document_types'][doc_type] = {}
-        
-        for lang, docs in lang_data.items():
-            # Sanitize language code for filename
-            lang_safe = lang.replace('-', '_')
-            filename = f'data/{doc_type}_{lang_safe}.json'
-            save_json(docs, filename)
-            
-            metadata['document_types'][doc_type][lang] = {
-                'file': filename,
-                'count': len(docs),
-            }
-    
-    # Save metadata
-    save_json(metadata, 'metadata.json')
+    # Update metadata
+    update_metadata()
     
     print("\n" + "=" * 50)
-    print("Fetch complete!")
+    print(f"Complete! Added {total_added} new documents total.")
     print(f"Finished at: {datetime.now().isoformat()}")
     print("=" * 50)
+
 
 if __name__ == '__main__':
     main()
