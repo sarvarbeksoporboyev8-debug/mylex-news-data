@@ -31,10 +31,6 @@ BASE_URLS = {
 DOC_TYPES = {
     'codes': 21,
     'laws': 22,
-    'president': 3,
-    'government': 4,
-    'ministries': 5,
-    'international': 6,
 }
 
 LANG_SUFFIXES = {
