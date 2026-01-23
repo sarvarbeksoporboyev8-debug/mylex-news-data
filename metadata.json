@@ -1,53 +1,50 @@
 {
-  "last_updated": "2026-01-23T16:27:32Z",
+  "last_updated": "2026-01-23T16:35:00Z",
   "document_types": {
-  "codes": {
-    "en": {"file": "data/codes_en.json", "count": 20},
-    "ru": {"file": "data/codes_ru.json", "count": 9},
-    "uz": {"file": "data/codes_uz.json", "count": 20},
-    "uz-Cyrl": {"file": "data/codes_uz_Cyrl.json", "count": 20}
-  },
-  "constitution": {
-    "en": {"file": "data/constitution_en.json", "count": 2},
-    "ru": {"file": "data/constitution_ru.json", "count": 2},
-    "uz": {"file": "data/constitution_uz.json", "count": 2},
-    "uz-Cyrl": {"file": "data/constitution_uz_Cyrl.json", "count": 3}
-  },
-  "government": {
-    "en": {"file": "data/government_en.json", "count": 20},
-    "ru": {"file": "data/government_ru.json", "count": 20},
-    "uz": {"file": "data/government_uz.json", "count": 20},
-    "uz-Cyrl": {"file": "data/government_uz_Cyrl.json", "count": 20}
-  },
-  "international": {
-    "en": {"file": "data/international_en.json", "count": 20},
-    "ru": {"file": "data/international_ru.json", "count": 20},
-    "uz": {"file": "data/international_uz.json", "count": 20},
-    "uz-Cyrl": {"file": "data/international_uz_Cyrl.json", "count": 20}
-  },
-  "laws": {
-    "en": {"file": "data/laws_en.json", "count": 20},
-    "ru": {"file": "data/laws_ru.json", "count": 20},
-    "uz": {"file": "data/laws_uz.json", "count": 20},
-    "uz-Cyrl": {"file": "data/laws_uz_Cyrl.json", "count": 20}
-  },
-  "ministries": {
-    "en": {"file": "data/ministries_en.json", "count": 20},
-    "ru": {"file": "data/ministries_ru.json", "count": 4},
-    "uz": {"file": "data/ministries_uz.json", "count": 20},
-    "uz-Cyrl": {"file": "data/ministries_uz_Cyrl.json", "count": 20}
-  },
-  "news": {
-    "en": {"file": "data/news_en.json", "count": 20},
-    "ru": {"file": "data/news_ru.json", "count": 20},
-    "uz": {"file": "data/news_uz.json", "count": 20},
-    "uz-Cyrl": {"file": "data/news_uz_Cyrl.json", "count": 20}
-  },
-  "president": {
-    "en": {"file": "data/president_en.json", "count": 20},
-    "ru": {"file": "data/president_ru.json", "count": 20},
-    "uz": {"file": "data/president_uz.json", "count": 20},
-    "uz-Cyrl": {"file": "data/president_uz_Cyrl.json", "count": 20}
-  }
+    "codes": {
+      "en": {"file": "data/codes_en.json", "count": 9},
+      "ru": {"file": "data/codes_ru.json", "count": 28},
+      "uz": {"file": "data/codes_uz.json", "count": 28},
+      "uz-Cyrl": {"file": "data/codes_uz_Cyrl.json", "count": 29}
+    },
+    "constitution": {
+      "uz-Cyrl": {"file": "data/constitution_uz_Cyrl.json", "count": 3}
+    },
+    "government": {
+      "en": {"file": "data/government_en.json", "count": 4143},
+      "ru": {"file": "data/government_ru.json", "count": 11266},
+      "uz": {"file": "data/government_uz.json", "count": 11265},
+      "uz-Cyrl": {"file": "data/government_uz_Cyrl.json", "count": 11268}
+    },
+    "international": {
+      "en": {"file": "data/international_en.json", "count": 113},
+      "ru": {"file": "data/international_ru.json", "count": 1630},
+      "uz": {"file": "data/international_uz.json", "count": 1632},
+      "uz-Cyrl": {"file": "data/international_uz_Cyrl.json", "count": 1629}
+    },
+    "laws": {
+      "en": {"file": "data/laws_en.json", "count": 658},
+      "ru": {"file": "data/laws_ru.json", "count": 1518},
+      "uz": {"file": "data/laws_uz.json", "count": 1518},
+      "uz-Cyrl": {"file": "data/laws_uz_Cyrl.json", "count": 1521}
+    },
+    "ministries": {
+      "en": {"file": "data/ministries_en.json", "count": 4},
+      "ru": {"file": "data/ministries_ru.json", "count": 8809},
+      "uz": {"file": "data/ministries_uz.json", "count": 8832},
+      "uz-Cyrl": {"file": "data/ministries_uz_Cyrl.json", "count": 8818}
+    },
+    "news": {
+      "en": {"file": "data/news_en.json", "count": 8225},
+      "ru": {"file": "data/news_ru.json", "count": 43780},
+      "uz": {"file": "data/news_uz.json", "count": 52207},
+      "uz-Cyrl": {"file": "data/news_uz_Cyrl.json", "count": 53213}
+    },
+    "president": {
+      "en": {"file": "data/president_en.json", "count": 3326},
+      "ru": {"file": "data/president_ru.json", "count": 5374},
+      "uz": {"file": "data/president_uz.json", "count": 5374},
+      "uz-Cyrl": {"file": "data/president_uz_Cyrl.json", "count": 5374}
+    }
   }
 }
