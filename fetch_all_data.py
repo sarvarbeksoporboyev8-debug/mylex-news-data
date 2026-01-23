@@ -194,15 +194,22 @@ def load_existing_data(filepath):
         return []
 
 
+def normalize_id(doc_id):
+    """Normalize ID by removing minus sign."""
+    return doc_id.lstrip('-')
+
+
 def merge_documents(existing, new_docs):
     """Merge new documents with existing, avoiding duplicates."""
-    existing_ids = {doc['id'] for doc in existing}
+    # Normalize IDs for comparison (some have minus, some don't)
+    existing_ids = {normalize_id(doc['id']) for doc in existing}
     added = []
     
     for doc in new_docs:
-        if doc['id'] not in existing_ids:
+        norm_id = normalize_id(doc['id'])
+        if norm_id not in existing_ids:
             added.append(doc)
-            existing_ids.add(doc['id'])
+            existing_ids.add(norm_id)
     
     # New docs go at the beginning (most recent first)
     return added + existing, len(added)
@@ -358,9 +365,14 @@ def main():
     print(f"Started at: {datetime.now().isoformat()}")
     print("=" * 50)
     
-    # Only fetch news (10 items from homepage, overwrites daily)
-    # Codes and laws are static - no need to fetch daily
-    total_fetched = fetch_news()
+    total_added = 0
+    
+    # Fetch and merge codes and laws
+    for doc_type, act_type in DOC_TYPES.items():
+        total_added += fetch_and_merge(doc_type, act_type)
+    
+    # Fetch news (10 items from homepage, overwrites daily)
+    fetch_news()
     
     # Update metadata
     update_metadata()
