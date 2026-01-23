@@ -253,40 +253,71 @@ def fetch_and_merge(doc_type, act_type):
     return total_added
 
 
+def fetch_homepage_news(html, base_url):
+    """Parse news from homepage 'Қонунчиликдаги янгиликлар' section (~10 items)."""
+    docs = []
+    seen = set()
+    
+    # Pattern for lx_link items (excludes passport links)
+    # Matches: <a class="lx_link" href="/uz/docs/-8012407" target="_blank">Title</a>
+    pattern = re.compile(
+        r'<a\s+class="lx_link"\s+href="(/(?:uz/|ru/|en/)?docs/(-?\d+))"[^>]*>([^<]+)</a>',
+        re.IGNORECASE
+    )
+    
+    for match in pattern.finditer(html):
+        path = match.group(1)
+        doc_id = match.group(2)
+        title = match.group(3).strip()
+        
+        if doc_id in seen or not title:
+            continue
+        seen.add(doc_id)
+        
+        docs.append({
+            'id': doc_id,
+            'title': title.replace('$', 'USD '),
+            'url': f'https://lex.uz{path}',
+        })
+        
+        # Limit to 10 items (homepage news section)
+        if len(docs) >= 10:
+            break
+    
+    return docs
+
+
 def fetch_news():
-    """Fetch latest news with pagination and merge."""
-    print(f"\nProcessing news...")
-    total_added = 0
-    today = datetime.now().strftime('%d.%m.%Y')
+    """Fetch latest news from homepage (overwrites, not merges)."""
+    print(f"\nProcessing news (homepage)...")
+    total_fetched = 0
     
     for lang, lang_param in LANGUAGES.items():
         base_url = BASE_URLS[lang]
-        url = f'{base_url}/search/all?from=01.01.2020&to={today}&lang={lang_param}'
         
         lang_suffix = LANG_SUFFIXES[lang]
         filepath = f'{DATA_DIR}/news_{lang_suffix}.json'
         
-        print(f"  {lang}: fetching from {url}")
+        print(f"  {lang}: fetching homepage {base_url}")
         
-        # Use pagination to get more documents
-        session = requests.Session()
-        new_docs = fetch_with_pagination(url, session, max_pages=MAX_PAGES)
-        print(f"    Fetched {len(new_docs)} total from lex.uz")
+        try:
+            response = requests.get(base_url, headers=HEADERS, timeout=60)
+            response.raise_for_status()
+            
+            news = fetch_homepage_news(response.text, base_url)
+            print(f"    Found {len(news)} news items")
+            
+            if news:
+                save_json(news, filepath)
+                print(f"    Saved to {filepath}")
+                total_fetched += len(news)
+            
+        except Exception as e:
+            print(f"    Failed: {e}")
         
-        existing = load_existing_data(filepath)
-        print(f"    Existing: {len(existing)} documents")
-        
-        merged, added = merge_documents(existing, new_docs)
-        print(f"    Added {added} new documents")
-        
-        if added > 0:
-            save_json(merged, filepath)
-            print(f"    Saved {len(merged)} total to {filepath}")
-        
-        total_added += added
-        time.sleep(3)
+        time.sleep(2)
     
-    return total_added
+    return total_fetched
 
 
 def update_metadata():
