@@ -1,11 +1,142 @@
 [
-  {"id": "7658590", "title": "Water Code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/7658590"},
-  {"id": "5437769", "title": "Urban Planning Code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/5437769"},
-  {"id": "4458857", "title": "Election Code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/4458857"},
-  {"id": "5695786", "title": "Сode of the Republic of Uzbekistan on Administrative proceedings", "url": "http://lex.uz/en/docs/5695786"},
-  {"id": "5535095", "title": "Civil procedure code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/5535095"},
-  {"id": "5535133", "title": "Customs code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/5535133"},
-  {"id": "5535058", "title": "Budget code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/5535058"},
-  {"id": "5712113", "title": "Family code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/5712113"},
-  {"id": "4850395", "title": "Air Code of the Republic of Uzbekistan", "url": "http://lex.uz/en/docs/4850395"}
+  {
+    "id": "7658581",
+    "title": "Водный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/7658581"
+  },
+  {
+    "id": "6257291",
+    "title": "Трудовой кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/6257291"
+  },
+  {
+    "id": "5307955",
+    "title": "Градостроительный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/5307955"
+  },
+  {
+    "id": "4674893",
+    "title": "Налоговый кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/4674893"
+  },
+  {
+    "id": "4386846",
+    "title": "Избирательный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/4386846"
+  },
+  {
+    "id": "3527365",
+    "title": "Кодекс Республики Узбекистан об административном судопроизводстве",
+    "url": "https://lex.uz/en/docs/3527365"
+  },
+  {
+    "id": "3523895",
+    "title": "Экономический процессуальный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/3523895"
+  },
+  {
+    "id": "3517334",
+    "title": "Гражданский процессуальный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/3517334"
+  },
+  {
+    "id": "2876352",
+    "title": "Таможенный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/2876352"
+  },
+  {
+    "id": "2304140",
+    "title": "Бюджетный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/2304140"
+  },
+  {
+    "id": "1286689",
+    "title": "Налоговый кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/1286689"
+  },
+  {
+    "id": "45494",
+    "title": "Градостроительный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/45494"
+  },
+  {
+    "id": "106134",
+    "title": "Жилищный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/106134"
+  },
+  {
+    "id": "104723",
+    "title": "Семейный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/104723"
+  },
+  {
+    "id": "149947",
+    "title": "Земельный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/149947"
+  },
+  {
+    "id": "184744",
+    "title": "Таможенный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/184744"
+  },
+  {
+    "id": "186098",
+    "title": "Гражданский процессуальный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/186098"
+  },
+  {
+    "id": "185981",
+    "title": "Хозяйственный процессуальный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/185981"
+  },
+  {
+    "id": "163627",
+    "title": "Уголовно-исполнительный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/163627"
+  },
+  {
+    "id": "147172",
+    "title": "Налоговый кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/147172"
+  },
+  {
+    "id": "180550",
+    "title": "Гражданский кодекс Республики Узбекистан (часть вторая)",
+    "url": "https://lex.uz/en/docs/180550"
+  },
+  {
+    "id": "111181",
+    "title": "Гражданский кодекс Республики Узбекистан (часть первая)",
+    "url": "https://lex.uz/en/docs/111181"
+  },
+  {
+    "id": "145261",
+    "title": "Трудовой кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/145261"
+  },
+  {
+    "id": "111463",
+    "title": "Уголовно-процессуальный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/111463"
+  },
+  {
+    "id": "111457",
+    "title": "Уголовный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/111457"
+  },
+  {
+    "id": "97661",
+    "title": "Кодекс Республики Узбекистан об административной ответственности",
+    "url": "https://lex.uz/en/docs/97661"
+  },
+  {
+    "id": "195758",
+    "title": "Хозяйственный процессуальный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/195758"
+  },
+  {
+    "id": "55599",
+    "title": "Воздушный кодекс Республики Узбекистан",
+    "url": "https://lex.uz/en/docs/55599"
+  }
 ]
