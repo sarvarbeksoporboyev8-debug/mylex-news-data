@@ -1,25 +1,25 @@
 {
-  "last_updated": "2026-01-23T13:07:36.702487Z",
+  "last_updated": "2026-01-23T13:11:27.904880Z",
   "languages": {
     "uz-Cyrl": {
       "file": "news_uz_Cyrl.json",
-      "count": 0,
-      "new_today": 0
+      "count": 20,
+      "new_today": 20
     },
     "uz": {
       "file": "news_uz.json",
-      "count": 0,
-      "new_today": 0
+      "count": 20,
+      "new_today": 20
     },
     "ru": {
       "file": "news_ru.json",
-      "count": 0,
-      "new_today": 0
+      "count": 20,
+      "new_today": 20
     },
     "en": {
       "file": "news_en.json",
-      "count": 0,
-      "new_today": 0
+      "count": 20,
+      "new_today": 20
     }
   }
 }
