@@ -3,6 +3,7 @@
 Fetch latest documents from lex.uz and MERGE with existing data.
 Only adds new documents, preserves existing ones.
 Runs daily via GitHub Actions.
+Supports pagination to fetch more than 20 documents.
 """
 
 import json
@@ -44,15 +45,105 @@ LANG_SUFFIXES = {
 }
 
 HEADERS = {
-    'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Content-Type': 'application/x-www-form-urlencoded',
 }
 
 DATA_DIR = 'data'
+MAX_PAGES = 10  # Limit pages to avoid too many requests
+
+
+def extract_viewstate(html):
+    """Extract ASP.NET ViewState and other hidden fields."""
+    fields = {}
+    patterns = [
+        (r'id="__VIEWSTATE" value="([^"]*)"', '__VIEWSTATE'),
+        (r'id="__VIEWSTATEGENERATOR" value="([^"]*)"', '__VIEWSTATEGENERATOR'),
+        (r'id="__EVENTVALIDATION" value="([^"]*)"', '__EVENTVALIDATION'),
+    ]
+    for pattern, name in patterns:
+        match = re.search(pattern, html)
+        if match:
+            fields[name] = match.group(1)
+    return fields
+
+
+def has_next_page(html):
+    """Check if there's a next page button."""
+    return 'ucFoundActsControl$LinkButton1' in html or 'ucFoundActsControl_LinkButton1' in html
+
+
+def fetch_with_pagination(url, session, max_pages=MAX_PAGES):
+    """Fetch all pages using ASP.NET postback pagination."""
+    all_docs = []
+    seen_ids = set()
+    
+    # First request
+    try:
+        response = session.get(url, headers=HEADERS, timeout=60)
+        response.raise_for_status()
+        html = response.text
+    except Exception as e:
+        print(f"    Initial request failed: {e}")
+        return []
+    
+    # Parse first page
+    docs = parse_html(html)
+    for doc in docs:
+        if doc['id'] not in seen_ids:
+            seen_ids.add(doc['id'])
+            all_docs.append(doc)
+    
+    print(f"    Page 1: {len(docs)} docs")
+    
+    # Check for more pages
+    page = 2
+    while has_next_page(html) and page <= max_pages:
+        viewstate = extract_viewstate(html)
+        if not viewstate.get('__VIEWSTATE'):
+            break
+        
+        # Prepare postback data
+        post_data = {
+            '__EVENTTARGET': 'ucFoundActsControl$LinkButton1',
+            '__EVENTARGUMENT': '',
+            '__VIEWSTATE': viewstate.get('__VIEWSTATE', ''),
+            '__VIEWSTATEGENERATOR': viewstate.get('__VIEWSTATEGENERATOR', ''),
+            '__EVENTVALIDATION': viewstate.get('__EVENTVALIDATION', ''),
+        }
+        
+        time.sleep(1)  # Be nice to server
+        
+        try:
+            response = session.post(url, data=post_data, headers=HEADERS, timeout=60)
+            response.raise_for_status()
+            html = response.text
+        except Exception as e:
+            print(f"    Page {page} request failed: {e}")
+            break
+        
+        docs = parse_html(html)
+        new_count = 0
+        for doc in docs:
+            if doc['id'] not in seen_ids:
+                seen_ids.add(doc['id'])
+                all_docs.append(doc)
+                new_count += 1
+        
+        print(f"    Page {page}: {len(docs)} docs ({new_count} new)")
+        
+        if new_count == 0:
+            break  # No new docs, stop
+        
+        page += 1
+    
+    return all_docs
 
 
 def fetch_url(url, retries=3):
-    """Fetch URL with retries."""
+    """Fetch URL with retries (simple, no pagination)."""
     for attempt in range(retries):
         try:
             response = requests.get(url, headers=HEADERS, timeout=60)
@@ -128,7 +219,7 @@ def save_json(data, filepath):
 
 
 def fetch_and_merge(doc_type, act_type):
-    """Fetch latest docs and merge with existing."""
+    """Fetch latest docs with pagination and merge with existing."""
     print(f"\nProcessing {doc_type}...")
     total_added = 0
     
@@ -140,9 +231,11 @@ def fetch_and_merge(doc_type, act_type):
         filepath = f'{DATA_DIR}/{doc_type}_{lang_suffix}.json'
         
         print(f"  {lang}: fetching from {url}")
-        html = fetch_url(url)
-        new_docs = parse_html(html)
-        print(f"    Fetched {len(new_docs)} from lex.uz")
+        
+        # Use pagination to get more documents
+        session = requests.Session()
+        new_docs = fetch_with_pagination(url, session, max_pages=MAX_PAGES)
+        print(f"    Fetched {len(new_docs)} total from lex.uz")
         
         existing = load_existing_data(filepath)
         print(f"    Existing: {len(existing)} documents")
@@ -155,13 +248,13 @@ def fetch_and_merge(doc_type, act_type):
             print(f"    Saved {len(merged)} total to {filepath}")
         
         total_added += added
-        time.sleep(2)
+        time.sleep(3)  # Longer delay between languages
     
     return total_added
 
 
 def fetch_news():
-    """Fetch latest news and merge."""
+    """Fetch latest news with pagination and merge."""
     print(f"\nProcessing news...")
     total_added = 0
     today = datetime.now().strftime('%d.%m.%Y')
@@ -174,9 +267,11 @@ def fetch_news():
         filepath = f'{DATA_DIR}/news_{lang_suffix}.json'
         
         print(f"  {lang}: fetching from {url}")
-        html = fetch_url(url)
-        new_docs = parse_html(html)
-        print(f"    Fetched {len(new_docs)} from lex.uz")
+        
+        # Use pagination to get more documents
+        session = requests.Session()
+        new_docs = fetch_with_pagination(url, session, max_pages=MAX_PAGES)
+        print(f"    Fetched {len(new_docs)} total from lex.uz")
         
         existing = load_existing_data(filepath)
         print(f"    Existing: {len(existing)} documents")
@@ -189,7 +284,7 @@ def fetch_news():
             print(f"    Saved {len(merged)} total to {filepath}")
         
         total_added += added
-        time.sleep(2)
+        time.sleep(3)
     
     return total_added
 
