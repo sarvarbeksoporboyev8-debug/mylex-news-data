@@ -355,7 +355,7 @@ def main():
     update_metadata()
     
     print("\n" + "=" * 50)
-    print(f"Complete! Added {total_added} new documents total.")
+    print(f"Complete! Fetched {total} documents total.")
     print(f"Finished at: {datetime.now().isoformat()}")
     print("=" * 50)
 
