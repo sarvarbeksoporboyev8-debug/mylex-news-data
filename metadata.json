@@ -1,0 +1,9 @@
+{
+  "last_updated": null,
+  "languages": {
+    "uz-Cyrl": {"file": "news_uz_Cyrl.json", "count": 0},
+    "uz": {"file": "news_uz.json", "count": 0},
+    "ru": {"file": "news_ru.json", "count": 0},
+    "en": {"file": "news_en.json", "count": 0}
+  }
+}
