@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-01-23T21:37:47.754137",
+  "last_updated": "2026-01-24T04:17:10.279092",
   "document_types": {
     "news_uz": {
       "Cyrl": {
@@ -24,7 +24,7 @@
     "laws": {
       "ru": {
         "file": "data/laws_ru.json",
-        "count": 659
+        "count": 1519
       },
       "uz": {
         "file": "data/laws_uz.json",
@@ -32,13 +32,13 @@
       },
       "en": {
         "file": "data/laws_en.json",
-        "count": 1519
+        "count": 659
       }
     },
     "codes": {
       "en": {
         "file": "data/codes_en.json",
-        "count": 28
+        "count": 9
       },
       "uz": {
         "file": "data/codes_uz.json",
@@ -46,7 +46,7 @@
       },
       "ru": {
         "file": "data/codes_ru.json",
-        "count": 9
+        "count": 28
       }
     },
     "president": {
