@@ -17,8 +17,8 @@ import time
 LANGUAGES = {
     'uz-Cyrl': 3,
     'uz': 4,
-    'ru': 2,
-    'en': 1,
+    'ru': 1,
+    'en': 2,
 }
 
 BASE_URLS = {
