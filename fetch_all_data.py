@@ -274,14 +274,16 @@ def fetch_news():
     
     for lang, lang_param in LANGUAGES.items():
         base_url = BASE_URLS[lang]
+        # Add lang param to get correct language on homepage
+        url = f'{base_url}?lang={lang_param}'
         
         lang_suffix = LANG_SUFFIXES[lang]
         filepath = f'{DATA_DIR}/news_{lang_suffix}.json'
         
-        print(f"  {lang}: fetching homepage {base_url}")
+        print(f"  {lang}: fetching homepage {url}")
         
         try:
-            response = requests.get(base_url, headers=HEADERS, timeout=60)
+            response = requests.get(url, headers=HEADERS, timeout=60)
             response.raise_for_status()
             
             news = fetch_homepage_news(response.text, base_url)
