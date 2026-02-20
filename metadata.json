@@ -1,165 +1,25 @@
 {
-  "last_updated": "2026-02-19T07:09:49.513767",
-  "document_types": {
-    "news": {
-      "uz": {
-        "file": "data/news_uz.json",
-        "count": 10
-      },
-      "ru": {
-        "file": "data/news_ru.json",
-        "count": 10
-      },
-      "en": {
-        "file": "data/news_en.json",
-        "count": 10
-      }
+  "last_updated": "2026-02-20T06:47:25.505385Z",
+  "languages": {
+    "uz-Cyrl": {
+      "file": "news_uz_Cyrl.json",
+      "count": 96,
+      "new_today": 1
     },
-    "constitution_uz": {
-      "Cyrl": {
-        "file": "data/constitution_uz_Cyrl.json",
-        "count": 3
-      }
+    "uz": {
+      "file": "news_uz.json",
+      "count": 96,
+      "new_today": 1
     },
-    "codes": {
-      "en": {
-        "file": "data/codes_en.json",
-        "count": 9
-      },
-      "uz": {
-        "file": "data/codes_uz.json",
-        "count": 28
-      },
-      "ru": {
-        "file": "data/codes_ru.json",
-        "count": 28
-      }
+    "ru": {
+      "file": "news_ru.json",
+      "count": 96,
+      "new_today": 1
     },
-    "laws": {
-      "ru": {
-        "file": "data/laws_ru.json",
-        "count": 1522
-      },
-      "uz": {
-        "file": "data/laws_uz.json",
-        "count": 1521
-      },
-      "en": {
-        "file": "data/laws_en.json",
-        "count": 662
-      }
-    },
-    "ministries_uz": {
-      "Cyrl": {
-        "file": "data/ministries_uz_Cyrl.json",
-        "count": 8818
-      }
-    },
-    "ministries": {
-      "uz": {
-        "file": "data/ministries_uz.json",
-        "count": 8832
-      },
-      "ru": {
-        "file": "data/ministries_ru.json",
-        "count": 8809
-      },
-      "en": {
-        "file": "data/ministries_en.json",
-        "count": 4
-      }
-    },
-    "international_uz": {
-      "Cyrl": {
-        "file": "data/international_uz_Cyrl.json",
-        "count": 1629
-      }
-    },
-    "government_uz": {
-      "Cyrl": {
-        "file": "data/government_uz_Cyrl.json",
-        "count": 11268
-      }
-    },
-    "president": {
-      "ru": {
-        "file": "data/president_ru.json",
-        "count": 5374
-      },
-      "uz": {
-        "file": "data/president_uz.json",
-        "count": 5374
-      },
-      "en": {
-        "file": "data/president_en.json",
-        "count": 3326
-      }
-    },
-    "constitution": {
-      "en": {
-        "file": "data/constitution_en.json",
-        "count": 2
-      },
-      "uz": {
-        "file": "data/constitution_uz.json",
-        "count": 2
-      },
-      "ru": {
-        "file": "data/constitution_ru.json",
-        "count": 2
-      }
-    },
-    "government": {
-      "en": {
-        "file": "data/government_en.json",
-        "count": 4143
-      },
-      "uz": {
-        "file": "data/government_uz.json",
-        "count": 11265
-      },
-      "ru": {
-        "file": "data/government_ru.json",
-        "count": 11266
-      }
-    },
-    "international": {
-      "ru": {
-        "file": "data/international_ru.json",
-        "count": 1630
-      },
-      "en": {
-        "file": "data/international_en.json",
-        "count": 113
-      },
-      "uz": {
-        "file": "data/international_uz.json",
-        "count": 1632
-      }
-    },
-    "codes_uz": {
-      "Cyrl": {
-        "file": "data/codes_uz_Cyrl.json",
-        "count": 29
-      }
-    },
-    "news_uz": {
-      "Cyrl": {
-        "file": "data/news_uz_Cyrl.json",
-        "count": 10
-      }
-    },
-    "laws_uz": {
-      "Cyrl": {
-        "file": "data/laws_uz_Cyrl.json",
-        "count": 1524
-      }
-    },
-    "president_uz": {
-      "Cyrl": {
-        "file": "data/president_uz_Cyrl.json",
-        "count": 5374
-      }
+    "en": {
+      "file": "news_en.json",
+      "count": 96,
+      "new_today": 1
     }
   }
 }
